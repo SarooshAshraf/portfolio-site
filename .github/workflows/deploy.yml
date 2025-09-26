@@ -1,20 +1,16 @@
-name: Deploy to NAS
+name: Deploy to NAS (self-hosted)
+
 on:
   push:
     branches: [ main ]
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy files to NAS
-        uses: burnett01/rsync-deployments@5.2
-        with:
-          switches: -avzr --delete
-          path: ./
-          remote_path: /volume2/docker/personal-website/site/
-          remote_host: ${{ secrets.NAS_HOST }}
-          remote_user: ${{ secrets.NAS_USER }}
-          remote_key: ${{ secrets.NAS_SSH_KEY }}
+      - name: Deploy files to NAS web root
+        run: |
+          rm -rf /volume2/docker/personal-website/site/*
+          cp -a "$GITHUB_WORKSPACE"/. /volume2/docker/personal-website/site/
