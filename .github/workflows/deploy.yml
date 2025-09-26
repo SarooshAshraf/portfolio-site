@@ -1,5 +1,4 @@
 name: Deploy to NAS (self-hosted)
-
 on:
   push:
     branches: [ main ]
@@ -10,7 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy files to NAS web root
+      - name: Deploy site files
         run: |
           rm -rf /volume2/docker/personal-website/site/*
           cp -a "$GITHUB_WORKSPACE"/. /volume2/docker/personal-website/site/
+          rm -rf /volume2/docker/personal-website/site/.git \
+                 /volume2/docker/personal-website/site/.github
