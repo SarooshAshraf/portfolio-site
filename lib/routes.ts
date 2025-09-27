@@ -1,0 +1,5 @@
+export const ROOT = '/'
+export const PROJECTS = '/projects'
+export const NOTES = '/notes'
+export const RECRUITER = '/recruiter'
+export const ABOUT = '/about'
