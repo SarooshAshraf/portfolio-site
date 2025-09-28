@@ -19,11 +19,8 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Build
+      - name: Build static site
         run: npm run build
-
-      - name: Export static site
-        run: npm run export
 
       - name: Deploy static export to NAS nginx site dir
         run: |
