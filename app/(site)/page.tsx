@@ -35,13 +35,13 @@ const sectionCards = [
   },
   {
     title: "Projects",
-    description: "Product stories that blend experimentation, metrics, and craft, shipped end-to-end.",
+    description: "Cool projects I've worked on!",
     href: "/projects",
     status: "Featured work",
   },
   {
     title: "Notes",
-    description: "Snapshots of learnings across data engineering, ML systems, and decision science.",
+    description: "My take on the tech world",
     href: "/notes",
     status: "Fresh updates",
   },
@@ -78,7 +78,7 @@ export default function Page() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: 'easeOut', delay: 0.3 }}
             >
-              Hi, I&apos;m Saroosh. Thanks for visiting my site.
+              Hi, I&apos;m Saroosh. Thanks for visiting my (WIP) site.
             </motion.h1>
             <motion.p
               className="mx-auto max-w-2xl text-lg text-slate-200/90 lg:mx-0"
