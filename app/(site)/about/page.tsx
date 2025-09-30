@@ -30,7 +30,7 @@ export default function AboutPage() {
             From curiosity to momentum.
           </h1>
           <p className="text-lg text-slate-300/90">
-            I build data and machine learning experiences that give teams clarity, confidence, and the courage to ship. That means translating complex narratives into decisions leaders trust—and staying close enough to the pipeline to keep models honest.
+            I build data and machine learning experiences that give teams clarity, confidence, and the courage to ship. That means translating complex narratives into decisions leaders trust?and staying close enough to the pipeline to keep models honest.
           </p>
           <div className="grid gap-4 sm:grid-cols-3">
             {highlights.map((item) => (
@@ -66,4 +66,6 @@ export default function AboutPage() {
     </main>
   )
 }
+
+
 
