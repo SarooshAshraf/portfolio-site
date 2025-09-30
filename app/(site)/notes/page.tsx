@@ -1,7 +1,291 @@
+﻿'use client'
+
+import Image from 'next/image'
+import { useEffect, useMemo, useState, type FormEvent, type MouseEvent } from 'react'
+
+const STORAGE_KEY = 'saroosh-notes-v1'
+
+type Note = {
+  id: string
+  title: string
+  body: string
+  date: string
+  imageData: string | null
+}
+
+const formatDate = (value: string) =>
+  new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+  }).format(new Date(value))
+
+const readFileAsDataURL = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve((reader.result as string) ?? '')
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+
 export default function NotesPage() {
+  const [notes, setNotes] = useState<Note[]>([])
+  const [activeNoteId, setActiveNoteId] = useState<string | null>(null)
+  const [isFormOpen, setIsFormOpen] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY)
+      if (!stored) return
+      const parsed: Note[] = JSON.parse(stored)
+      if (Array.isArray(parsed)) {
+        setNotes(parsed)
+      }
+    } catch (error) {
+      console.warn('Unable to restore notes from storage.', error)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(notes))
+    } catch (error) {
+      console.warn('Unable to persist notes to storage.', error)
+    }
+  }, [notes])
+
+  useEffect(() => {
+    if (!notes.length) {
+      setActiveNoteId(null)
+      return
+    }
+    if (!activeNoteId || !notes.some((note) => note.id === activeNoteId)) {
+      setActiveNoteId(notes[0].id)
+    }
+  }, [notes, activeNoteId])
+
+  useEffect(() => {
+    if (!isFormOpen) return
+    const originalOverflow = document.body.style.overflow
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsFormOpen(false)
+      }
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKey)
+    return () => {
+      document.body.style.overflow = originalOverflow
+      window.removeEventListener('keydown', handleKey)
+    }
+  }, [isFormOpen])
+
+  const activeNote = useMemo(() => {
+    if (!activeNoteId) return null
+    return notes.find((note) => note.id === activeNoteId) ?? null
+  }, [notes, activeNoteId])
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const title = (formData.get('title') as string | null)?.trim() ?? ''
+    const body = (formData.get('body') as string | null)?.trim() ?? ''
+    const file = formData.get('image')
+
+    if (!title || !body) {
+      return
+    }
+
+    let imageData: string | null = null
+    if (file instanceof File && file.size > 0) {
+      try {
+        imageData = await readFileAsDataURL(file)
+      } catch (error) {
+        console.warn('Unable to read image file.', error)
+        imageData = null
+      }
+    }
+
+    const newNote: Note = {
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `note-${Date.now()}`,
+      title,
+      body,
+      date: new Date().toISOString(),
+      imageData,
+    }
+
+    setNotes((prev) => [newNote, ...prev])
+    setActiveNoteId(newNote.id)
+    setIsFormOpen(false)
+    event.currentTarget.reset()
+  }
+
+  const handleOverlayClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      setIsFormOpen(false)
+    }
+  }
+
   return (
-    <main>
-      <section>{/* TODO: Add notes content */}</section>
+    <main className="relative isolate min-h-[calc(100vh-8rem)] overflow-hidden bg-slate-950">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.18),transparent_65%)]" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(148,163,184,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.07)_1px,transparent_1px)] bg-[size:90px_90px]" />
+
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 py-20">
+        <header className="max-w-3xl">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-indigo-200/80">
+            Notes lab
+          </span>
+          <h1 className="mt-6 text-4xl font-semibold text-white sm:text-5xl">Ideas in motion.</h1>
+          <p className="mt-4 text-lg text-slate-300/90">
+            Capture experiments, frameworks, and sparks worth sharing. Pin the headline and add depth later, all while keeping the visual rhythm recruiters already love.
+          </p>
+        </header>
+
+        <section>
+          <h2 className="sr-only">Notes list</h2>
+          {notes.length ? (
+            <div className="flex flex-wrap gap-4">
+              {notes.map((note) => (
+                <button
+                  key={note.id}
+                  type="button"
+                  onClick={() => setActiveNoteId(note.id)}
+                  className={`group flex min-w-[16rem] flex-1 items-center justify-between gap-4 rounded-full border px-6 py-3 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                    activeNoteId === note.id
+                      ? 'border-indigo-400/70 bg-indigo-500/20 text-white'
+                      : 'border-white/10 bg-white/5 text-slate-200/90 hover:border-indigo-300/40 hover:bg-indigo-500/10'
+                  }`}
+                >
+                  <span className="text-base font-semibold">{note.title}</span>
+                  <span className="text-xs uppercase tracking-[0.3em] text-indigo-200/80">
+                    {formatDate(note.date)}
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-dashed border-white/15 bg-white/5 p-12 text-center text-slate-300/80">
+              <p className="text-lg font-medium">No notes yet.</p>
+              <p className="mt-2 text-sm text-slate-400/90">Tap the plus button to craft your first entry.</p>
+            </div>
+          )}
+        </section>
+
+        <section>
+          <h2 className="sr-only">Active note</h2>
+          {activeNote ? (
+            <article className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-[0_35px_80px_rgba(15,23,42,0.35)]">
+              <div className="flex flex-col gap-6">
+                <header className="flex flex-col gap-2">
+                  <span className="text-xs uppercase tracking-[0.35em] text-indigo-200/80">
+                    {formatDate(activeNote.date)}
+                  </span>
+                  <h3 className="text-3xl font-semibold text-white">{activeNote.title}</h3>
+                </header>
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5">
+                  {activeNote.imageData ? (
+                    <Image
+                      src={activeNote.imageData}
+                      alt="Note attachment"
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 100vw, 600px"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-slate-900/60 text-sm font-semibold uppercase tracking-[0.4em] text-slate-500">
+                      N/A
+                    </div>
+                  )}
+                </div>
+                <div className="text-base leading-relaxed text-slate-200/90 whitespace-pre-wrap">
+                  {activeNote.body}
+                </div>
+              </div>
+            </article>
+          ) : (
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-8 text-center text-slate-300/80">
+              <p className="text-base">Select a note to read its story.</p>
+            </div>
+          )}
+        </section>
+      </section>
+
+      <button
+        type="button"
+        onClick={() => setIsFormOpen(true)}
+        className="fixed bottom-8 right-8 inline-flex h-14 w-14 items-center justify-center rounded-full border border-indigo-400/70 bg-indigo-500/20 text-3xl font-semibold text-white shadow-[0_20px_45px_rgba(79,70,229,0.45)] transition hover:-translate-y-0.5 hover:bg-indigo-400/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300"
+        aria-label="Create a new note"
+      >
+        +
+      </button>
+
+      {isFormOpen ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur"
+          onClick={handleOverlayClick}
+        >
+          <form
+            onSubmit={handleSubmit}
+            className="relative w-full max-w-2xl rounded-3xl border border-white/10 bg-slate-900/95 p-8 text-white shadow-[0_35px_90px_rgba(15,23,42,0.55)]"
+          >
+            <h2 className="text-2xl font-semibold">New note</h2>
+            <p className="mt-2 text-sm text-slate-300/80">
+              Outline the headline, capture the insight, and drop an optional visual to keep the format consistent.
+            </p>
+
+            <label className="mt-6 block text-sm font-semibold tracking-[0.2em] text-indigo-200/80">
+              Heading
+              <input
+                name="title"
+                required
+                placeholder="Give this note a sharp headline"
+                className="mt-2 w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-base text-white outline-none transition focus:border-indigo-300/60 focus:bg-slate-900/60"
+              />
+            </label>
+
+            <label className="mt-6 block text-sm font-semibold tracking-[0.2em] text-indigo-200/80">
+              Body
+              <textarea
+                name="body"
+                required
+                rows={6}
+                placeholder="Share the story, framework, or lesson worth remembering."
+                className="mt-2 w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-base text-white outline-none transition focus:border-indigo-300/60 focus:bg-slate-900/60"
+              />
+            </label>
+
+            <label className="mt-6 block text-sm font-semibold tracking-[0.2em] text-indigo-200/80">
+              Optional image
+              <input
+                name="image"
+                type="file"
+                accept="image/*"
+                className="mt-2 w-full rounded-xl border border-dashed border-white/20 bg-white/5 px-4 py-3 text-sm text-slate-300/80 file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-500/20 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:border-indigo-300/40"
+              />
+            </label>
+
+            <div className="mt-8 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setIsFormOpen(false)}
+                className="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-slate-200/80 transition hover:border-white/30 hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="rounded-full bg-indigo-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400"
+              >
+                Post note
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : null}
     </main>
   )
 }
