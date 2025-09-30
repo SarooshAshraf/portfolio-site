@@ -205,7 +205,7 @@ export default function Page() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(165,180,252,0.35),transparent_70%)]" />
             <div className="relative mx-auto max-w-2xl">
               <h3 className="text-3xl font-semibold text-white sm:text-4xl">
-                Let&apos;s build data experiences that make teams say 'wow'.
+                Let&apos;s build data experiences that make teams say &#39;wow&#39;.
               </h3>
               <p className="mt-4 text-base text-slate-200/90">
                 Whether it&apos;s architecting the pipeline, productionizing the model, or telling the story, I love working on problems where Data &amp; ML unlock lasting momentum.
