@@ -1,4 +1,4 @@
-name: Build & Deploy to NAS (self-hosted)
+﻿name: Build & Deploy to NAS (self-hosted)
 
 on:
   push:
@@ -20,9 +20,21 @@ jobs:
         run: npm install
 
       - name: Build static site
+        env:
+          NEXT_PUBLIC_NOTES_API_URL: ${{ secrets.NEXT_PUBLIC_NOTES_API_URL }}
         run: npm run build
 
       - name: Deploy static export to NAS nginx site dir
         run: |
           rm -rf /volume2/docker/personal-website/site/*
           cp -a ./out/. /volume2/docker/personal-website/site/
+
+      - name: Sync notes API source
+        run: |
+          rm -rf /volume2/docker/personal-website/notes-api
+          mkdir -p /volume2/docker/personal-website/notes-api
+          cp -a ./notes-api/. /volume2/docker/personal-website/notes-api/
+
+      - name: Rebuild notes API service
+        run: |
+          docker compose -f /volume2/docker/personal-website/docker-compose.yml up -d --build notes-api

@@ -1,9 +1,16 @@
 ﻿'use client'
 
 import Image from 'next/image'
-import { useEffect, useMemo, useState, type FormEvent, type MouseEvent } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FormEvent, type MouseEvent } from 'react'
 
-const STORAGE_KEY = 'saroosh-notes-v1'
+type ApiNote = {
+  id: number
+  title: string
+  content: string
+  image_data: string | null
+  created_at: string
+  updated_at: string
+}
 
 type Note = {
   id: string
@@ -12,6 +19,9 @@ type Note = {
   date: string
   imageData: string | null
 }
+
+const envBase = (process.env.NEXT_PUBLIC_NOTES_API_URL ?? '').trim()
+const buildApiBase = () => (envBase ? envBase.replace(/\/$/, '') : '')
 
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat('en-US', {
@@ -26,43 +36,69 @@ const readFileAsDataURL = (file: File) =>
     reader.readAsDataURL(file)
   })
 
+const mapApiNote = (note: ApiNote): Note => ({
+  id: String(note.id),
+  title: note.title,
+  body: note.content,
+  date: note.created_at,
+  imageData: note.image_data ?? null,
+})
+
 export default function NotesPage() {
+  const [apiBase, setApiBase] = useState<string>(() => buildApiBase())
   const [notes, setNotes] = useState<Note[]>([])
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [formError, setFormError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY)
-      if (!stored) return
-      const parsed: Note[] = JSON.parse(stored)
-      if (Array.isArray(parsed)) {
-        setNotes(parsed)
-      }
-    } catch (error) {
-      console.warn('Unable to restore notes from storage.', error)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(notes))
-    } catch (error) {
-      console.warn('Unable to persist notes to storage.', error)
-    }
-  }, [notes])
-
-  useEffect(() => {
-    if (!notes.length) {
-      setActiveNoteId(null)
+    if (apiBase) {
       return
     }
-    if (!activeNoteId || !notes.some((note) => note.id === activeNoteId)) {
-      setActiveNoteId(notes[0].id)
+    if (typeof window !== 'undefined') {
+      const origin = window.location.origin.replace(/\/$/, '')
+      setApiBase(`${origin}/api`)
     }
-  }, [notes, activeNoteId])
+  }, [apiBase])
+
+  const fetchNotes = useCallback(async () => {
+    if (!apiBase) {
+      return
+    }
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`${apiBase}/notes`, {
+        headers: { Accept: 'application/json' },
+      })
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`)
+      }
+      const data: ApiNote[] = await response.json()
+      const mapped = data.map(mapApiNote)
+      setNotes(mapped)
+      if (mapped.length) {
+        setActiveNoteId((current) => (current && mapped.some((note) => note.id === current) ? current : mapped[0].id))
+      } else {
+        setActiveNoteId(null)
+      }
+    } catch (err) {
+      console.error('Unable to load notes', err)
+      setError('Unable to load notes right now. Please try again in a moment.')
+    } finally {
+      setLoading(false)
+    }
+  }, [apiBase])
+
+  useEffect(() => {
+    if (!apiBase) {
+      return
+    }
+    void fetchNotes()
+  }, [apiBase, fetchNotes])
 
   useEffect(() => {
     if (!isFormOpen) return
@@ -87,37 +123,57 @@ export default function NotesPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (!apiBase) {
+      setFormError('Notes API base URL is not configured yet.')
+      return
+    }
+
     const formData = new FormData(event.currentTarget)
     const title = (formData.get('title') as string | null)?.trim() ?? ''
     const body = (formData.get('body') as string | null)?.trim() ?? ''
     const file = formData.get('image')
 
     if (!title || !body) {
+      setFormError('Heading and body are required.')
       return
     }
+
+    setFormError(null)
+    setIsSubmitting(true)
 
     let imageData: string | null = null
     if (file instanceof File && file.size > 0) {
       try {
         imageData = await readFileAsDataURL(file)
-      } catch (error) {
-        console.warn('Unable to read image file.', error)
-        imageData = null
+      } catch (err) {
+        console.error('Unable to read image file.', err)
+        setFormError('Unable to read the selected image. Please try a different file.')
+        setIsSubmitting(false)
+        return
       }
     }
 
-    const newNote: Note = {
-      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `note-${Date.now()}`,
-      title,
-      body,
-      date: new Date().toISOString(),
-      imageData,
+    try {
+      const response = await fetch(`${apiBase}/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content: body, image_data: imageData }),
+      })
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`)
+      }
+      const created: ApiNote = await response.json()
+      const mapped = mapApiNote(created)
+      setNotes((prev) => [mapped, ...prev.filter((note) => note.id !== mapped.id)])
+      setActiveNoteId(mapped.id)
+      setIsFormOpen(false)
+      event.currentTarget.reset()
+    } catch (err) {
+      console.error('Unable to create note', err)
+      setFormError('Unable to post this note. Please try again shortly.')
+    } finally {
+      setIsSubmitting(false)
     }
-
-    setNotes((prev) => [newNote, ...prev])
-    setActiveNoteId(newNote.id)
-    setIsFormOpen(false)
-    event.currentTarget.reset()
   }
 
   const handleOverlayClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -144,7 +200,21 @@ export default function NotesPage() {
 
         <section>
           <h2 className="sr-only">Notes list</h2>
-          {notes.length ? (
+          {error ? (
+            <div className="rounded-3xl border border-red-400/40 bg-red-500/10 p-6 text-sm text-red-200">
+              {error}
+            </div>
+          ) : null}
+          {loading ? (
+            <div className="flex flex-wrap gap-4">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-16 min-w-[16rem] flex-1 animate-pulse rounded-full border border-white/10 bg-white/5"
+                />
+              ))}
+            </div>
+          ) : notes.length ? (
             <div className="flex flex-wrap gap-4">
               {notes.map((note) => (
                 <button
@@ -199,7 +269,7 @@ export default function NotesPage() {
                     </div>
                   )}
                 </div>
-                <div className="text-base leading-relaxed text-slate-200/90 whitespace-pre-wrap">
+                <div className="whitespace-pre-wrap text-base leading-relaxed text-slate-200/90">
                   {activeNote.body}
                 </div>
               </div>
@@ -236,6 +306,11 @@ export default function NotesPage() {
             <p className="mt-2 text-sm text-slate-300/80">
               Outline the headline, capture the insight, and drop an optional visual to keep the format consistent.
             </p>
+            {formError ? (
+              <p className="mt-4 rounded-2xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-red-200">
+                {formError}
+              </p>
+            ) : null}
 
             <label className="mt-6 block text-sm font-semibold tracking-[0.2em] text-indigo-200/80">
               Heading
@@ -278,9 +353,10 @@ export default function NotesPage() {
               </button>
               <button
                 type="submit"
-                className="rounded-full bg-indigo-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400"
+                disabled={isSubmitting}
+                className="rounded-full bg-indigo-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Post note
+                {isSubmitting ? 'Posting…' : 'Post note'}
               </button>
             </div>
           </form>
