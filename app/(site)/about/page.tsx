@@ -1,4 +1,4 @@
-﻿import Image from 'next/image'
+import Image from 'next/image'
 
 const highlights = [
   {
@@ -30,7 +30,7 @@ export default function AboutPage() {
             From curiosity to momentum.
           </h1>
           <p className="text-lg text-slate-300/90">
-            I build data and machine learning experiences that give teams clarity, confidence, and the courage to ship. That means translating complex narratives into decisions leaders trust—and staying close enough to the pipeline to keep models honest.
+            I build data and machine learning experiences that give teams clarity, confidence, and the courage to ship. That means translating complex narratives into decisions leaders trust�and staying close enough to the pipeline to keep models honest.
           </p>
           <div className="grid gap-4 sm:grid-cols-3">
             {highlights.map((item) => (
@@ -52,7 +52,7 @@ export default function AboutPage() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.35),transparent_70%)]" />
             <div className="relative aspect-[4/5] w-full">
               <Image
-                src="public\about-hero.jpg"
+                src="/about-hero.jpg"
                 alt="Saroosh collaborating in a data and ML workspace"
                 fill
                 className="object-cover object-center"
@@ -66,3 +66,4 @@ export default function AboutPage() {
     </main>
   )
 }
+
