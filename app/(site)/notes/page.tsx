@@ -192,9 +192,9 @@ export default function NotesPage() {
           <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-indigo-200/80">
             Notes lab
           </span>
-          <h1 className="mt-6 text-4xl font-semibold text-white sm:text-5xl">Ideas in motion.</h1>
+          <h1 className="mt-6 text-4xl font-semibold text-white sm:text-5xl">Fun Stuff</h1>
           <p className="mt-4 text-lg text-slate-300/90">
-            Capture experiments, frameworks, and sparks worth sharing. Pin the headline and add depth later, all while keeping the visual rhythm recruiters already love.
+            My thoughts on industry, tech, and anything else :)
           </p>
         </header>
 
