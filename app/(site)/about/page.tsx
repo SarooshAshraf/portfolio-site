@@ -52,7 +52,7 @@ export default function AboutPage() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.35),transparent_70%)]" />
             <div className="relative aspect-[4/5] w-full">
               <Image
-                src="/images/about-hero.jpg"
+                src="public\about-hero.jpg"
                 alt="Saroosh collaborating in a data and ML workspace"
                 fill
                 className="object-cover object-center"
