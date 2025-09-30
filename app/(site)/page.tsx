@@ -1,5 +1,6 @@
 'use client'
 
+import type { Route } from 'next'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
@@ -17,6 +18,13 @@ const heroSignals = [
     description: "Building momentum with teams that love asking better questions together.",
   },
 ]
+
+type SectionCard = {
+  title: string
+  description: string
+  href: Route
+  status: string
+}
 
 const sectionCards = [
   {
@@ -37,7 +45,7 @@ const sectionCards = [
     href: "/notes",
     status: "Fresh updates",
   },
-]
+] satisfies SectionCard[];
 
 export default function Page() {
   return (

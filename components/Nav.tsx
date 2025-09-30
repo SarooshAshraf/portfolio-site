@@ -1,11 +1,17 @@
+import type { Route } from 'next'
 import Link from 'next/link'
 
+type NavLink = {
+  label: string
+  href: Route | { pathname: Route; hash?: string }
+}
+
 const navLinks = [
-  { href: '/#about', label: 'About' },
-  { href: '/notes', label: 'Notes' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/recruiter', label: 'For Recruiters' },
-]
+  { label: 'About', href: { pathname: '/', hash: 'about' } },
+  { label: 'Notes', href: '/notes' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'For Recruiters', href: '/recruiter' },
+] satisfies NavLink[]
 
 export default function Nav() {
   return (
@@ -23,7 +29,7 @@ export default function Nav() {
         <div className="hidden items-center gap-6 text-sm font-medium text-slate-300 sm:flex">
           {navLinks.map((link) => (
             <Link
-              key={link.href}
+              key={link.label}
               href={link.href}
               className="transition hover:text-white"
             >
