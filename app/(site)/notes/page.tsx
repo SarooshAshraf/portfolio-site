@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useState, type FormEvent, type MouseEvent } from 'react'
@@ -53,6 +53,8 @@ export default function NotesPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formError, setFormError] = useState<string | null>(null)
+  const [noteActionError, setNoteActionError] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     if (apiBase) {
@@ -70,6 +72,7 @@ export default function NotesPage() {
     }
     setLoading(true)
     setError(null)
+    setNoteActionError(null)
     try {
       const response = await fetch(`${apiBase}/notes`, {
         headers: { Accept: 'application/json' },
@@ -121,8 +124,50 @@ export default function NotesPage() {
     return notes.find((note) => note.id === activeNoteId) ?? null
   }, [notes, activeNoteId])
 
+  const handleDelete = useCallback(async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (isDeleting) {
+      return
+    }
+    if (!activeNoteId) {
+      return
+    }
+    if (!apiBase) {
+      setNoteActionError('Notes API base URL is not configured yet.')
+      return
+    }
+    if (!window.confirm('Delete this note? This cannot be undone.')) {
+      return
+    }
+    setIsDeleting(true)
+    setNoteActionError(null)
+    try {
+      const response = await fetch(`${apiBase}/notes/${activeNoteId}`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`)
+      }
+      const filtered = notes.filter((note) => note.id !== activeNoteId)
+      setNotes(filtered)
+      setActiveNoteId((current) => {
+        if (current && filtered.some((note) => note.id === current)) {
+          return current
+        }
+        return filtered.length ? filtered[0].id : null
+      })
+    } catch (err) {
+      console.error('Unable to delete note', err)
+      setNoteActionError('Unable to delete this note right now. Please try again shortly.')
+    } finally {
+      setIsDeleting(false)
+    }
+  }, [activeNoteId, apiBase, isDeleting, notes])
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setNoteActionError(null)
     if (!apiBase) {
       setFormError('Notes API base URL is not configured yet.')
       return
@@ -205,6 +250,11 @@ export default function NotesPage() {
               {error}
             </div>
           ) : null}
+          {noteActionError ? (
+            <div className="mt-4 rounded-3xl border border-red-400/40 bg-red-500/10 p-6 text-sm text-red-200">
+              {noteActionError}
+            </div>
+          ) : null}
           {loading ? (
             <div className="flex flex-wrap gap-4">
               {Array.from({ length: 3 }).map((_, index) => (
@@ -273,6 +323,14 @@ export default function NotesPage() {
                   {activeNote.body}
                 </div>
               </div>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="absolute bottom-6 right-6 inline-flex items-center gap-2 rounded-full border border-red-400/60 bg-red-500/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-red-100 transition hover:border-red-300 hover:bg-red-500/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete note'}
+              </button>
             </article>
           ) : (
             <div className="rounded-3xl border border-white/10 bg-white/5 p-8 text-center text-slate-300/80">
@@ -356,7 +414,7 @@ export default function NotesPage() {
                 disabled={isSubmitting}
                 className="rounded-full bg-indigo-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isSubmitting ? 'Posting…' : 'Post note'}
+                {isSubmitting ? 'Posting...' : 'Post note'}
               </button>
             </div>
           </form>
