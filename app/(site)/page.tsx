@@ -1,6 +1,7 @@
-'use client'
+﻿'use client'
 
 import type { Route } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
@@ -132,17 +133,18 @@ export default function Page() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.9, ease: 'easeOut', delay: 0.35 }}
           >
-            <div className="relative isolate flex w-full max-w-sm flex-col items-center justify-center overflow-hidden rounded-3xl border border-white/10 bg-white/10 px-10 py-16 text-center shadow-[0_35px_120px_rgba(8,47,73,0.45)]">
+            <div className="relative isolate w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-[0_35px_120px_rgba(8,47,73,0.45)]">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(129,140,248,0.45),transparent_70%)]" />
-              <span className="relative text-xs font-semibold uppercase tracking-[0.35em] text-indigo-200">
-                Insert hero image
-              </span>
-              <p className="relative mt-4 text-sm text-slate-100/80">
-                Swap this block with a visual that captures how you work - labs, whiteboards, or a shot in the flow.
-              </p>
-              <span className="relative mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.4em] text-white/70">
-                Image Placeholder
-              </span>
+              <div className="relative h-[22rem] w-full">
+                <Image
+                  src="/about-hero.jpg"
+                  alt="Saroosh collaborating in a data and ML workspace"
+                  fill
+                  className="object-cover object-center"
+                  sizes="(min-width: 1024px) 400px, 85vw"
+                  priority
+                />
+              </div>
             </div>
             <div aria-hidden className="absolute -top-8 right-10 h-36 w-36 rounded-full bg-indigo-500/40 blur-[90px]" />
             <div aria-hidden className="absolute bottom-6 -left-10 h-40 w-40 rounded-full bg-cyan-400/30 blur-[100px]" />
@@ -239,3 +241,5 @@ export default function Page() {
     </main>
   )
 }
+
+
