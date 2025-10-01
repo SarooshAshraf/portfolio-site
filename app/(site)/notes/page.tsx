@@ -303,24 +303,24 @@ export default function NotesPage() {
                   </span>
                   <h3 className="text-3xl font-semibold text-white">{activeNote.title}</h3>
                 </header>
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5">
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+                  <div className="whitespace-pre-wrap text-base leading-relaxed text-slate-200/90 lg:flex-1">
+                    {activeNote.body}
+                  </div>
                   {activeNote.imageData ? (
-                    <Image
-                      src={activeNote.imageData}
-                      alt="Note attachment"
-                      fill
-                      className="object-cover object-center"
-                      sizes="(max-width: 768px) 100vw, 600px"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-slate-900/60 text-sm font-semibold uppercase tracking-[0.4em] text-slate-500">
-                      N/A
-                    </div>
-                  )}
-                </div>
-                <div className="whitespace-pre-wrap text-base leading-relaxed text-slate-200/90">
-                  {activeNote.body}
+                    <figure className="flex shrink-0 justify-center lg:justify-end">
+                      <div className="relative aspect-[4/5] w-40 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_45px_rgba(15,23,42,0.35)] sm:w-48 lg:w-56">
+                        <Image
+                          src={activeNote.imageData}
+                          alt="Note attachment"
+                          fill
+                          className="object-cover object-center"
+                          sizes="(max-width: 640px) 160px, (max-width: 1024px) 192px, 224px"
+                          unoptimized
+                        />
+                      </div>
+                    </figure>
+                  ) : null}
                 </div>
               </div>
               <button
