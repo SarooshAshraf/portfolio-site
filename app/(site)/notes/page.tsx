@@ -303,12 +303,12 @@ export default function NotesPage() {
                   </span>
                   <h3 className="text-3xl font-semibold text-white">{activeNote.title}</h3>
                 </header>
-                <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+                <div className="flex flex-col gap-6 pb-16 lg:flex-row lg:items-start lg:gap-8 lg:pr-28">
                   <div className="whitespace-pre-wrap text-base leading-relaxed text-slate-200/90 lg:flex-1">
                     {activeNote.body}
                   </div>
                   {activeNote.imageData ? (
-                    <figure className="flex shrink-0 justify-center lg:justify-end">
+                    <figure className="flex shrink-0 justify-center lg:justify-end lg:-translate-y-4">
                       <div className="relative aspect-[4/5] w-40 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_45px_rgba(15,23,42,0.35)] sm:w-48 lg:w-56">
                         <Image
                           src={activeNote.imageData}
