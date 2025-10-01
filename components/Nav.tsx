@@ -9,6 +9,7 @@ type NavLink = {
 const navLinks = [
   { label: 'About', href: { pathname: '/', hash: 'about' } },
   { label: 'Notes', href: '/notes' },
+  { label: 'Experience Timeline', href: '/about' },
   { label: 'Projects', href: '/projects' },
   { label: 'For Recruiters', href: '/recruiter' },
 ] satisfies NavLink[]

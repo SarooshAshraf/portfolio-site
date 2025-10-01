@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import type { Route } from 'next'
 import Image from 'next/image'
@@ -30,9 +30,9 @@ type SectionCard = {
 const sectionCards = [
   {
     title: "Experience Timeline",
-    description: "Follow the high-impact roles, teams, and ML moments powering my perspective. Launching soon.",
+    description: "Follow the high-impact roles, teams, and ML moments powering my perspective.",
     href: "/about",
-    status: "Coming soon",
+    status: "Now live",
   },
   {
     title: "Projects",
