@@ -11,40 +11,40 @@ type Experience = {
 
 const experiences: Experience[] = [
   {
-    title: 'Bachelor of engineering begins',
+    title: 'B.Eng Begins',
     description:
-      'I begin my journey into the complex realm of engineering, learning about hardware, systems, and electrical systems.',
+      'I begin my journey into the complex realm of engineering, learning about hardware, and systems.',
     icon: { src: '/mcmaster-logo.png', alt: 'McMaster University crest' },
   },
   {
     title: 'First engineering internship at IKO Industries',
-    description: 'I used my experience with Python and scripting to automate several plant processes.',
+    description: 'I used my experience with Python and scripting to automate several plant processes, resulting in massive efficiency boosts!',
     icon: { src: '/IKO-logo.png', alt: 'IKO Industries logo' },
   },
   {
     title: 'Product Data Management Intern at Enervac',
-    description: 'I set up and maintained the PDM vault for all products at Enervac.',
+    description: 'I set up and maintained the PDM vault for all products at Enervac. Lots of SQL, lots of detail, lots of improvement!',
     icon: { src: '/enervac-logo.jpg', alt: 'Enervac logo' },
   },
   {
-    title: 'California bound for Tesla',
+    title: 'Tesla ✈️ California!',
     description:
-      'I interned at Tesla from Jan 2022 to Sept 2022 doing product and battery engineering activities for the Cybertruck.',
+      'Helped develop the products and battery engineering behind the coolest truck in the world - Cybertruck',
     icon: { src: '/Tesla-logo.jpg', alt: 'Tesla logo' },
   },
   {
-    title: 'Graduation! I finish at McMaster',
-    description: 'I graduate from McMaster University ready to bridge hardware, software, and product.',
+    title: 'Graduation from McMaster!',
+    description: 'I graduated from McMaster University ready to bridge hardware, software, and product.',
     icon: { src: '/graduation-logo.jpg', alt: 'Graduation cap illustration' },
   },
   {
     title: 'Systems engineer at Toyota',
-    description: 'My work as a systems engineer was deeply impactful for the vehicles built here in Canada.',
+    description: 'My work as a quality systems engineer was deeply impactful for the vehicles built here in Canada.',
     icon: { src: '/toyota-logo.avif', alt: 'Toyota logo' },
   },
   {
-    title: 'Diving deep into software',
-    description: 'I begin my masters in software engineering at Ontario Tech University.',
+    title: 'Mastering Software Engineering',
+    description: 'I began my project-based M.Eng at Ontario Tech University, reporting to a supervisory professor',
     icon: { src: '/ontariotechuniversity-logo.jpg', alt: 'Ontario Tech University logo' },
   },
   {

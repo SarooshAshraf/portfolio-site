@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import type { Route } from 'next'
 import Image from 'next/image'
@@ -8,15 +8,15 @@ import { motion } from 'framer-motion'
 const heroSignals = [
   {
     title: "Strategic + hands-on",
-    description: "Architecting data foundations while staying close to the code and models.",
+    description: "I love conceptualizing, but also taking a product to launch!",
   },
   {
     title: "Outcome obsessed",
-    description: "Marrying experimentation with business storytelling so impact is obvious.",
+    description: "I am always asking, 'what are we trying to achieve here?'",
   },
   {
     title: "Curious collaborator",
-    description: "Building momentum with teams that love asking better questions together.",
+    description: "I work best with a cross-functional group!",
   },
 ]
 
@@ -87,7 +87,7 @@ export default function Page() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: 'easeOut', delay: 0.4 }}
             >
-              I love all things Data &amp; ML! I build stories, systems, and products that turn complex data into momentum for teams and the people they serve.
+              I'm excited by all things tech: Data, ML, &amp; software systems that make a difference
             </motion.p>
             <motion.div
               className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-center lg:justify-start"
@@ -162,13 +162,13 @@ export default function Page() {
             transition={{ duration: 0.7, ease: 'easeOut' }}
           >
             <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-white/60">
-              Choose your path
+              My Portfolio
             </p>
             <h2 className="mt-6 text-3xl font-semibold leading-tight text-white sm:text-4xl">
-              This landing page is your gateway into the full story.
+              Click around and get to know my story!
             </h2>
             <p className="mt-4 text-lg text-slate-300/90">
-              Dive into the experiences that shaped my craft, explore the products I loved shipping, or skim the notes where I unpack frameworks in real time.
+              Here you'll find projects I worked on, my experiences, and my take on random topics.
             </p>
           </motion.div>
 
@@ -215,10 +215,10 @@ export default function Page() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(165,180,252,0.35),transparent_70%)]" />
             <div className="relative mx-auto max-w-2xl">
               <h3 className="text-3xl font-semibold text-white sm:text-4xl">
-                Let&apos;s build data experiences that make teams say &#39;wow&#39;.
+                Let&apos;s build software that &#39;wows&#39; the world.
               </h3>
               <p className="mt-4 text-base text-slate-200/90">
-                Whether it&apos;s architecting the pipeline, productionizing the model, or telling the story, I love working on problems where Data &amp; ML unlock lasting momentum.
+                Whether it's architecting the pipeline, productionizing the model, or telling the story, I love working on problems where Data & ML produce incredible results
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
