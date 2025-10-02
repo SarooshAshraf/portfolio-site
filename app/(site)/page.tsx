@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import type { Route } from 'next'
 import Image from 'next/image'
@@ -52,9 +52,9 @@ export default function Page() {
   return (
     <main className="relative isolate overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.2),transparent_65%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:80px_80px]" />
-        <div className="absolute left-1/2 top-1/3 h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-indigo-500/20 blur-[180px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(14,116,144,0.25),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(100,116,139,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(100,116,139,0.06)_1px,transparent_1px)] bg-[size:80px_80px]" />
+        <div className="absolute left-1/2 top-1/3 h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-cyan-400/20 blur-[180px]" />
       </div>
 
       <section className="relative px-6 pt-32 pb-24">
