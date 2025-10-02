@@ -3,11 +3,12 @@ import os
 import sqlite3
 from typing import List, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 DB_PATH = os.environ.get("SQLITE_PATH", "/data/notes.db")
+ADMIN_PASSWORD = os.environ.get("NOTES_ADMIN_PASSWORD", "Nexus457*")
 
 app = FastAPI(title="Notes API", version="1.1.0")
 
@@ -126,7 +127,9 @@ def update_note(note_id: int, note: NoteIn) -> NoteOut:
 
 
 @app.delete("/notes/{note_id}", status_code=204)
-def delete_note(note_id: int) -> None:
+def delete_note(note_id: int, admin_password: Optional[str] = Header(default=None, alias="X-Admin-Password")) -> None:
+    if admin_password != ADMIN_PASSWORD:
+        raise HTTPException(status_code=401, detail="Invalid password")
     with get_conn() as conn:
         cur = conn.execute("DELETE FROM notes WHERE id = ?", (note_id,))
         if cur.rowcount == 0:

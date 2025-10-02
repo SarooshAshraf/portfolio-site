@@ -137,7 +137,15 @@ export default function NotesPage() {
       setNoteActionError('Notes API base URL is not configured yet.')
       return
     }
-    if (!window.confirm('Delete this note? This cannot be undone.')) {
+    const passwordPrompt = 'Only a password holder has the ability to perform this function. Please input the password.'
+    const password = typeof window !== 'undefined' ? window.prompt(passwordPrompt) : null
+    if (password === null) {
+      setNoteActionError('Deletion cancelled.')
+      return
+    }
+    const providedPassword = password.trim()
+    if (!providedPassword) {
+      setNoteActionError('Password is required to delete a note.')
       return
     }
     setIsDeleting(true)
@@ -145,7 +153,12 @@ export default function NotesPage() {
     try {
       const response = await fetch(`${apiBase}/notes/${activeNoteId}`, {
         method: 'DELETE',
+        headers: { 'X-Admin-Password': providedPassword },
       })
+      if (response.status === 401) {
+        setNoteActionError('Incorrect password.')
+        return
+      }
       if (!response.ok) {
         throw new Error(`Request failed with status ${response.status}`)
       }
