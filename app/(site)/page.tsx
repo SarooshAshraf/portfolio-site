@@ -1,9 +1,10 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import type { Route } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 const heroSignals = [
   {
@@ -48,7 +49,61 @@ const sectionCards = [
   },
 ] satisfies SectionCard[];
 
+const HERO_HEADLINE = "Hi, I'm Saroosh. Thanks for visiting my (WIP) site."
+
 export default function Page() {
+  const [typedText, setTypedText] = useState(HERO_HEADLINE)
+  const [isTypingComplete, setIsTypingComplete] = useState(true)
+  const typingIntervalRef = useRef<number | null>(null)
+  const startTimerRef = useRef<number | null>(null)
+  const hasAnimated = useRef(false)
+  const prefersReducedMotion = useReducedMotion()
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setTypedText(HERO_HEADLINE)
+      setIsTypingComplete(true)
+      return
+    }
+
+    if (hasAnimated.current) {
+      return
+    }
+
+    hasAnimated.current = true
+    setTypedText('')
+    setIsTypingComplete(false)
+
+    let currentIndex = 0
+
+    startTimerRef.current = window.setTimeout(() => {
+      typingIntervalRef.current = window.setInterval(() => {
+        currentIndex += 1
+        setTypedText(HERO_HEADLINE.slice(0, currentIndex))
+
+        if (currentIndex >= HERO_HEADLINE.length) {
+          setIsTypingComplete(true)
+          if (typingIntervalRef.current !== null) {
+            window.clearInterval(typingIntervalRef.current)
+            typingIntervalRef.current = null
+          }
+        }
+      }, 45)
+    }, 350)
+
+    return () => {
+      if (startTimerRef.current !== null) {
+        window.clearTimeout(startTimerRef.current)
+        startTimerRef.current = null
+      }
+
+      if (typingIntervalRef.current !== null) {
+        window.clearInterval(typingIntervalRef.current)
+        typingIntervalRef.current = null
+      }
+    }
+  }, [prefersReducedMotion])
+
   return (
     <main className="relative isolate overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -79,7 +134,18 @@ export default function Page() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: 'easeOut', delay: 0.3 }}
             >
-              Hi, I&apos;m Saroosh. Thanks for visiting my (WIP) site.
+              <span className="relative inline-flex items-baseline whitespace-pre">
+                {typedText}
+                {!isTypingComplete && (
+                  <motion.span
+                    aria-hidden
+                    className="ml-2 inline-block h-7 w-[2px] bg-white/80 sm:h-8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                )}
+              </span>
             </motion.h1>
             <motion.p
               className="mx-auto max-w-2xl text-lg text-slate-200/90 lg:mx-0"
