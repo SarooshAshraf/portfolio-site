@@ -77,58 +77,65 @@ export default function ExperienceTimelinePage() {
           </p>
         </header>
 
-        <div className="relative overflow-x-auto pb-16">
-          <div className="min-w-[1024px] px-4">
-            <div className="relative">
-              <div aria-hidden className="pointer-events-none absolute left-0 right-0 top-[72px] h-px bg-gradient-to-r from-indigo-400/40 via-white/15 to-indigo-400/40" />
-              <ul className="relative flex items-start justify-between gap-10">
-                {experiences.map((experience, index) => {
-                  const tooltipId = `experience-tooltip-${index}`
-                  const position = String(index + 1).padStart(2, '0')
+        <div className="relative pb-20 md:pb-24">
+          <div className="relative">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-28 hidden h-[6px] rounded-full bg-gradient-to-r from-indigo-400/60 via-white/40 to-indigo-400/60 shadow-[0_8px_30px_rgba(79,70,229,0.35)] md:block"
+            />
+            <ul className="relative flex flex-col items-center gap-12 md:flex-row md:items-start md:justify-between md:gap-10">
+              {experiences.map((experience, index) => {
+                const tooltipId = `experience-tooltip-${index}`
+                const position = String(index + 1).padStart(2, '0')
 
-                  return (
-                    <li
-                      key={experience.title}
-                      className="group relative flex min-w-[200px] flex-1 flex-col items-center pb-32 text-center"
+                return (
+                  <li
+                    key={experience.title}
+                    className="group relative flex w-full flex-col items-center text-center md:min-w-0 md:flex-1 md:pt-28"
+                  >
+                    <button
+                      type="button"
+                      aria-describedby={tooltipId}
+                      className="relative flex h-24 w-24 transform items-center justify-center rounded-full border-2 border-indigo-200/60 bg-indigo-500/10 text-white shadow-[0_18px_60px_rgba(79,70,229,0.3)] transition duration-300 hover:-translate-y-1 hover:border-indigo-100 hover:bg-indigo-500/20 focus-visible:-translate-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-200 md:h-28 md:w-28 md:-translate-y-1/2 md:shadow-[0_24px_70px_rgba(79,70,229,0.35)] md:hover:-translate-y-[65%] md:focus-visible:-translate-y-[65%]"
                     >
-                      <button
-                        type="button"
-                        aria-describedby={tooltipId}
-                        className="relative flex h-28 w-28 items-center justify-center rounded-full border border-indigo-300/50 bg-indigo-500/10 p-6 text-white shadow-[0_25px_70px_rgba(79,70,229,0.35)] transition hover:-translate-y-1 hover:border-indigo-200/70 hover:bg-indigo-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-200"
-                      >
-                        <span className="pointer-events-none absolute -top-6 text-xs font-semibold uppercase tracking-[0.35em] text-indigo-200/80">
-                          {position}
-                        </span>
+                      <span className="pointer-events-none absolute -top-7 text-xs font-semibold uppercase tracking-[0.35em] text-indigo-200/80 md:-top-9">
+                        {position}
+                      </span>
+                      <span className="sr-only">{experience.title}</span>
+                      <div className="pointer-events-none absolute inset-[5px] overflow-hidden rounded-full md:inset-[6px]">
                         <Image
                           src={experience.icon.src}
                           alt={experience.icon.alt}
-                          width={72}
-                          height={72}
-                          className="h-16 w-16 object-contain"
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 88px, 112px"
                         />
-                      </button>
-                      <h3 className="mt-6 max-w-[220px] text-base font-semibold text-white">
-                        {experience.title}
-                      </h3>
-                      <div
-                        id={tooltipId}
-                        role="tooltip"
-                        className="pointer-events-none absolute left-1/2 top-[calc(100%+1.75rem)] w-72 -translate-x-1/2 rounded-3xl border border-white/10 bg-slate-950/95 p-5 text-left opacity-0 shadow-[0_30px_80px_rgba(8,47,73,0.55)] transition duration-300 group-hover:-translate-y-2 group-hover:opacity-100 group-focus-within:-translate-y-2 group-focus-within:opacity-100"
-                      >
-                        <span aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l border-t border-white/10 bg-slate-950/95" />
-                        <p className="text-sm leading-relaxed text-slate-200/90">
-                          {experience.description}
-                        </p>
                       </div>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
+                    </button>
+
+                    <h3 className="mt-5 max-w-[260px] text-base font-semibold leading-snug text-white md:mt-6 md:max-w-[240px]">
+                      {experience.title}
+                    </h3>
+                    <div
+                      id={tooltipId}
+                      role="tooltip"
+                      className="pointer-events-none absolute left-1/2 top-[calc(100%+0.4rem)] hidden w-72 -translate-x-1/2 rounded-3xl border border-white/10 bg-slate-950/95 p-5 text-left opacity-0 shadow-[0_30px_80px_rgba(8,47,73,0.5)] transition duration-300 group-hover:-translate-y-1 group-hover:opacity-100 group-focus-within:-translate-y-1 group-focus-within:opacity-100 md:block"
+                    >
+                      <span aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l border-t border-white/10 bg-slate-950/95" />
+                      <p className="text-sm leading-relaxed text-slate-200/90">
+                        {experience.description}
+                      </p>
+                    </div>
+                    <p className="mt-3 max-w-[320px] text-sm leading-relaxed text-slate-300/80 md:hidden">
+                      {experience.description}
+                    </p>
+                  </li>
+                )
+              })}
+            </ul>
           </div>
         </div>
       </section>
     </main>
   )
 }
-
