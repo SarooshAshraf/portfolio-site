@@ -243,7 +243,7 @@ export default function NotesPage() {
   return (
     <main className="relative isolate min-h-[calc(100vh-8rem)] overflow-hidden bg-slate-950">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.18),transparent_65%)]" />
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNjAgMTYwJz4KICA8cmVjdCB3aWR0aD0nMTYwJyBoZWlnaHQ9JzE2MCcgZmlsbD0ndHJhbnNwYXJlbnQnLz4KICA8ZyBmaWxsPSdyZ2JhKDE0OCwxNjMsMTg0LDAuMTQpJyBmb250LWZhbWlseT0nIiJGaXJhIENvZGUiIiwgbW9ub3NwYWNlJyBmb250LXNpemU9JzEyJz4KICAgIDx0ZXh0IHg9JzEyJyB5PScyOCc+Y29uc3QgZGF0YSA9IFtdOzwvdGV4dD4KICAgIDx0ZXh0IHg9JzEyJyB5PSc1Mic+ZnVuY3Rpb24gbG9hZCgpIHs8L3RleHQ+CiAgICA8dGV4dCB4PScxMicgeT0nNzYnPiAgcmV0dXJuIHJlc3VsdDs8L3RleHQ+CiAgICA8dGV4dCB4PScxMicgeT0nMTAwJz59PC90ZXh0PgogICAgPHRleHQgeD0nMTInIHk9JzEyNCc+Jmx0O2RpdiZndDtVSSZsdDsvZGl2Jmd0OzwvdGV4dD4KICA8L2c+CiAgPGcgc3Ryb2tlPSdyZ2JhKDM0LDIxMSwyMzgsMC4xMiknIHN0cm9rZS13aWR0aD0nMScgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJz4KICAgIDxwYXRoIGQ9J00xMjQgMjQgbDE2IC0xMCcvPgogICAgPHBhdGggZD0nTTQ0IDEyOCBsLTE2IDEwJy8+CiAgICA8cGF0aCBkPSdNOTIgODAgbDEyIDEyJy8+CiAgPC9nPgo8L3N2Zz4=\")] bg-[size:160px_160px] opacity-60 mix-blend-soft-light" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[url('/pattern-code.svg')] bg-[size:160px_160px] opacity-60 mix-blend-soft-light" />
 
       <section className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 py-20">
         <header className="max-w-3xl">

@@ -1,0 +1,15 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+  <rect width="160" height="160" fill="none" />
+  <g fill="#94A3B8" fill-opacity="0.14" font-family="Fira Code, monospace" font-size="12">
+    <text x="12" y="28">const data = [];</text>
+    <text x="12" y="52">function load() {</text>
+    <text x="12" y="76">  return result;</text>
+    <text x="12" y="100">}</text>
+    <text x="12" y="124">&lt;div&gt;UI&lt;/div&gt;</text>
+  </g>
+  <g stroke="#22D3EE" stroke-opacity="0.12" stroke-width="1" stroke-linecap="round">
+    <path d="M124 24 l16 -10" />
+    <path d="M44 128 l-16 10" />
+    <path d="M92 80 l12 12" />
+  </g>
+</svg>
