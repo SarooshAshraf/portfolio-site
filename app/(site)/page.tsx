@@ -134,16 +134,16 @@ export default function Page() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: 'easeOut', delay: 0.3 }}
             >
-              <span className="relative inline-block">
-                <span aria-hidden className="invisible block select-none whitespace-pre">
+              <span className="relative block">
+                <span aria-hidden className="pointer-events-none block select-none whitespace-pre-wrap opacity-0">
                   {HERO_HEADLINE}
                 </span>
-                <span className="absolute inset-0 inline-flex items-baseline whitespace-pre">
-                  <span>{typedText}</span>
+                <span className="absolute inset-0 block whitespace-pre-wrap">
+                  {typedText}
                   {!isTypingComplete && (
                     <motion.span
                       aria-hidden
-                      className="ml-2 inline-block h-7 w-[2px] bg-white/80 sm:h-8"
+                      className="ml-1 inline-block h-7 w-[2px] align-bottom bg-white/80 sm:h-8"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: [0, 1, 0] }}
                       transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
