@@ -87,7 +87,7 @@ export default function Page() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: 'easeOut', delay: 0.4 }}
             >
-              I'm excited by all things tech: Data, ML, &amp; software systems that make a difference
+              I&apos;m excited by all things tech: Data, ML, &amp; software systems that make a difference
             </motion.p>
             <motion.div
               className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-center lg:justify-start"
@@ -168,7 +168,7 @@ export default function Page() {
               Click around and get to know my story!
             </h2>
             <p className="mt-4 text-lg text-slate-300/90">
-              Here you'll find projects I worked on, my experiences, and my take on random topics.
+              Here you&apos;ll find projects I worked on, my experiences, and my take on random topics.
             </p>
           </motion.div>
 
@@ -218,7 +218,7 @@ export default function Page() {
                 Let&apos;s build software that &#39;wows&#39; the world.
               </h3>
               <p className="mt-4 text-base text-slate-200/90">
-                Whether it's architecting the pipeline, productionizing the model, or telling the story, I love working on problems where Data & ML produce incredible results
+                Whether it&apos;s architecting the pipeline, productionizing the model, or telling the story, I love working on problems where Data & ML produce incredible results
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
