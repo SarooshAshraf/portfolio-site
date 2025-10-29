@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feature/rsync ]
 
 jobs:
   deploy:
@@ -26,14 +26,80 @@ jobs:
 
       - name: Deploy static export to NAS nginx site dir
         run: |
-          rm -rf /volume2/docker/personal-website/site/*
-          cp -a ./out/. /volume2/docker/personal-website/site/
+          echo "Validating rsync availability..."
+          rsync --version | head -n 1
+
+          TARGET_SITE="/volume2/docker/personal-website/site"
+          echo "Checking that ${TARGET_SITE} exists..."
+          if [ ! -d "${TARGET_SITE}" ]; then
+            echo "::error ::Expected ${TARGET_SITE} to exist before deployment."
+            exit 1
+          fi
+
+          echo "Checking write permissions for $(whoami) on ${TARGET_SITE}..."
+          if [ ! -w "${TARGET_SITE}" ]; then
+            echo "::error ::The workflow user lacks write permissions for ${TARGET_SITE}."
+            exit 1
+          fi
+
+          echo "Confirming nginx container mount source..."
+          NGINX_MOUNT=$(docker container inspect portfolio-web --format '{{range .Mounts}}{{if eq .Destination "/usr/share/nginx/html"}}{{.Source}}{{end}}{{end}}' 2>/dev/null || true)
+          if [ -z "${NGINX_MOUNT}" ]; then
+            echo "::warning ::Unable to inspect portfolio-web mount; is the container running?"
+          elif [[ "${NGINX_MOUNT}" != *"${TARGET_SITE}"* ]]; then
+            echo "::warning ::portfolio-web does not appear to mount ${TARGET_SITE} to /usr/share/nginx/html (reported: ${NGINX_MOUNT})."
+          fi
+
+          RSYNC_OPTS=(
+            -a
+            --delete
+            --checksum
+            --chmod=D755,F644
+            --no-owner
+            --no-group
+            --no-perms
+            --mkpath
+            --omit-dir-times
+            --exclude=.git/
+            --exclude=node_modules/
+          )
+
+          echo "Syncing static export to ${TARGET_SITE} with rsync..."
+          rsync "${RSYNC_OPTS[@]}" ./out/ "${TARGET_SITE}/"
+
+          # Optional atomic deploy pattern:
+          # 1. rsync "${RSYNC_OPTS[@]}" ./out/ "${TARGET_SITE}.staging/"
+          # 2. mv "${TARGET_SITE}" "${TARGET_SITE}.previous"
+          # 3. mv "${TARGET_SITE}.staging" "${TARGET_SITE}"
+          # 4. Keep "${TARGET_SITE}.previous" for quick rollback, then prune when stable.
 
       - name: Sync notes API source
         run: |
-          rm -rf /volume2/docker/personal-website/notes-api
-          mkdir -p /volume2/docker/personal-website/notes-api
-          cp -a ./notes-api/. /volume2/docker/personal-website/notes-api/
+          TARGET_NOTES="/volume2/docker/personal-website/notes-api"
+          TARGET_PARENT=$(dirname "${TARGET_NOTES}")
+
+          echo "Ensuring parent directory ${TARGET_PARENT} is writable..."
+          if [ ! -w "${TARGET_PARENT}" ]; then
+            echo "::error ::The workflow user cannot write to ${TARGET_PARENT}."
+            exit 1
+          fi
+
+          RSYNC_OPTS=(
+            -a
+            --delete
+            --checksum
+            --chmod=D755,F644
+            --no-owner
+            --no-group
+            --no-perms
+            --mkpath
+            --omit-dir-times
+            --exclude=.git/
+            --exclude=node_modules/
+          )
+
+          echo "Syncing notes API sources to ${TARGET_NOTES} with rsync..."
+          rsync "${RSYNC_OPTS[@]}" ./notes-api/ "${TARGET_NOTES}/"
 
       - name: Rebuild notes API service
         run: |
