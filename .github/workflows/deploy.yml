@@ -23,7 +23,7 @@ jobs:
         env:
           NEXT_PUBLIC_NOTES_API_URL: ${{ secrets.NEXT_PUBLIC_NOTES_API_URL }}
         run: npm run build
-        # If you rely on next export to produce ./out, add:
+        # If relying on next export to produce ./out, add:
         # run: |
         #   npm run build
         #   npm run export
