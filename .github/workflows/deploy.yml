@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [ main, feature/rsync ]
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -32,7 +32,11 @@ jobs:
           TARGET_SITE="/volume2/docker/personal-website/site"
           echo "Checking that ${TARGET_SITE} exists..."
           if [ ! -d "${TARGET_SITE}" ]; then
-            echo "::error ::Expected ${TARGET_SITE} to exist before deployment."
+            echo "::warning ::${TARGET_SITE} not found; creating it now."
+            mkdir -p "${TARGET_SITE}"
+          fi
+          if [ ! -d "${TARGET_SITE}" ]; then
+            echo "::error ::Unable to create ${TARGET_SITE}."
             exit 1
           fi
 
@@ -79,6 +83,14 @@ jobs:
           TARGET_PARENT=$(dirname "${TARGET_NOTES}")
 
           echo "Ensuring parent directory ${TARGET_PARENT} is writable..."
+          if [ ! -d "${TARGET_PARENT}" ]; then
+            echo "::warning ::Parent directory ${TARGET_PARENT} not found; creating it now."
+            mkdir -p "${TARGET_PARENT}"
+          fi
+          if [ ! -d "${TARGET_PARENT}" ]; then
+            echo "::error ::Unable to create ${TARGET_PARENT}."
+            exit 1
+          fi
           if [ ! -w "${TARGET_PARENT}" ]; then
             echo "::error ::The workflow user cannot write to ${TARGET_PARENT}."
             exit 1
