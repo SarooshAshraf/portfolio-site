@@ -1,5 +1,5 @@
 ﻿name: Build & Deploy to NAS (self-hosted)
-
+#dummy comment
 on:
   push:
     branches: [ main, feature/rsync ]
