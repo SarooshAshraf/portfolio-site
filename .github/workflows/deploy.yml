@@ -35,7 +35,7 @@ jobs:
         run: |
           npm run build
           npm run export
-
+          
       - name: Verify static export exists
         run: |
           if [ ! -d "./out" ] || [ -z "$(ls -A ./out)" ]; then
