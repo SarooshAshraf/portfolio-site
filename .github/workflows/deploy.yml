@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main, feature/rsync ]
 
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: self-hosted
@@ -27,7 +31,7 @@ jobs:
           cache: 'npm'
 
       - name: Install deps
-        run: npm install
+        run: npm ci
 
       - name: Build & export static site
         env:
@@ -83,7 +87,6 @@ jobs:
           RSYNC_OPTS=(
             -a
             --delete
-            --checksum
             --chmod=D755,F644
             --no-owner
             --no-group
@@ -136,7 +139,6 @@ jobs:
           RSYNC_OPTS=(
             -a
             --delete
-            --checksum
             --chmod=D755,F644
             --no-owner
             --no-group
