@@ -29,14 +29,19 @@ jobs:
       - name: Install deps
         run: npm install
 
-      - name: Build static site
+      - name: Build & export static site
         env:
           NEXT_PUBLIC_NOTES_API_URL: ${{ secrets.NEXT_PUBLIC_NOTES_API_URL }}
-        run: npm run build
-        # If relying on next export to produce ./out, add:
-        # run: |
-        #   npm run build
-        #   npm run export
+        run: |
+          npm run build
+          npm run export
+
+      - name: Verify static export exists
+        run: |
+          if [ ! -d "./out" ] || [ -z "$(ls -A ./out)" ]; then
+            echo "::error ::Static export ./out is missing or empty. Did you set output: 'export' or run next export?"
+            exit 1
+          fi
 
       - name: Save Next.js cache
         if: steps.restore_next_cache.outputs.cache-hit != 'true' && always()
