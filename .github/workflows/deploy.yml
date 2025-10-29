@@ -1,5 +1,5 @@
 ﻿name: Build & Deploy to NAS (self-hosted)
-#dummy comment v4
+#dummy comment v5
 on:
   push:
     branches: [ main, feature/rsync ]
@@ -23,6 +23,10 @@ jobs:
         env:
           NEXT_PUBLIC_NOTES_API_URL: ${{ secrets.NEXT_PUBLIC_NOTES_API_URL }}
         run: npm run build
+        # If you rely on next export to produce ./out, add:
+        # run: |
+        #   npm run build
+        #   npm run export
 
       - name: Deploy static export to NAS nginx site dir
         run: |
@@ -61,7 +65,7 @@ jobs:
             --chmod=D755,F644
             --no-owner
             --no-group
-            --perms
+            --no-perms
             --mkpath
             --omit-dir-times
             --exclude=.git/
@@ -76,6 +80,17 @@ jobs:
           # 2. mv "${TARGET_SITE}" "${TARGET_SITE}.previous"
           # 3. mv "${TARGET_SITE}.staging" "${TARGET_SITE}"
           # 4. Keep "${TARGET_SITE}.previous" for quick rollback, then prune when stable.
+
+      - name: Normalize permissions (static site)
+        run: |
+          TARGET_SITE="/volume2/docker/personal-website/site"
+
+          # Drop ACLs so nginx can read everything (ignore errors if ACLs absent)
+          setfacl -bR "${TARGET_SITE}" || true
+
+          # Enforce 755 on dirs and 644 on files, including unchanged artifacts
+          find "${TARGET_SITE}" -type d -print0 | xargs -0 chmod 755
+          find "${TARGET_SITE}" -type f -print0 | xargs -0 chmod 644
 
       - name: Sync notes API source
         run: |
@@ -103,7 +118,7 @@ jobs:
             --chmod=D755,F644
             --no-owner
             --no-group
-            --perms
+            --no-perms
             --mkpath
             --omit-dir-times
             --exclude=.git/
