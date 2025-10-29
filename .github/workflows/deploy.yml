@@ -61,7 +61,7 @@ jobs:
             --chmod=D755,F644
             --no-owner
             --no-group
-            --no-perms
+            --perms
             --mkpath
             --omit-dir-times
             --exclude=.git/
@@ -103,7 +103,7 @@ jobs:
             --chmod=D755,F644
             --no-owner
             --no-group
-            --no-perms
+            --perms
             --mkpath
             --omit-dir-times
             --exclude=.git/
