@@ -5,6 +5,7 @@ import type { Route } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, useReducedMotion } from 'framer-motion'
+import ColorBends from '@/components/ColorBends'
 
 const heroSignals = [
   {
@@ -106,10 +107,21 @@ export default function Page() {
 
   return (
     <main className="relative isolate overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(14,116,144,0.25),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[url('/pattern-code.svg')] bg-[size:160px_160px] opacity-60 mix-blend-soft-light" />
-        <div className="absolute left-1/2 top-1/3 h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-cyan-400/20 blur-[180px]" />
+      <div className="fixed inset-0 -z-10">
+        <ColorBends
+          className="h-full w-full"
+          colors={['#ff5c7a', '#8a5cff', '#00ffd1']}
+          rotation={0}
+          autoRotate={0}
+          speed={0.2}
+          scale={1}
+          frequency={1}
+          warpStrength={1}
+          mouseInfluence={1}
+          parallax={0.5}
+          noise={0.1}
+          transparent
+        />
       </div>
 
       <section className="relative px-6 pt-32 pb-24">
