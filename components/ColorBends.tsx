@@ -142,7 +142,7 @@ export default function ColorBends({
 
   useEffect(() => {
     const container = containerRef.current
-    if (!container) {
+    if (!container || typeof window === 'undefined') {
       return
     }
     const scene = new THREE.Scene()
@@ -202,12 +202,14 @@ export default function ColorBends({
 
     handleResize()
 
-    if ('ResizeObserver' in window) {
+    let detachWindowListener: (() => void) | null = null
+    if (typeof ResizeObserver !== 'undefined') {
       const ro = new ResizeObserver(handleResize)
       ro.observe(container)
       resizeObserverRef.current = ro
     } else {
       window.addEventListener('resize', handleResize)
+      detachWindowListener = () => window.removeEventListener('resize', handleResize)
     }
 
     const loop = () => {
@@ -233,8 +235,13 @@ export default function ColorBends({
 
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
-      if (resizeObserverRef.current) resizeObserverRef.current.disconnect()
-      else window.removeEventListener('resize', handleResize)
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect()
+        resizeObserverRef.current = null
+      }
+      if (detachWindowListener) {
+        detachWindowListener()
+      }
       geometry.dispose()
       material.dispose()
       renderer.dispose()
