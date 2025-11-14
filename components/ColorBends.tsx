@@ -183,7 +183,7 @@ export default function ColorBends({
       alpha: true,
     })
     rendererRef.current = renderer
-    ;(renderer as any).outputColorSpace = (THREE as any).SRGBColorSpace
+    renderer.outputColorSpace = THREE.SRGBColorSpace
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
     renderer.setClearColor(0x000000, transparent ? 0 : 1)
     renderer.domElement.style.width = '100%'
@@ -242,7 +242,7 @@ export default function ColorBends({
         container.removeChild(renderer.domElement)
       }
     }
-  }, [])
+  }, [speed, scale, frequency, warpStrength, mouseInfluence, parallax, noise, transparent])
 
   useEffect(() => {
     const material = materialRef.current
