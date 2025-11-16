@@ -241,9 +241,7 @@ export default function NotesPage() {
   }
 
   return (
-    <main className="relative isolate min-h-[calc(100vh-8rem)] overflow-hidden bg-slate-950">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.18),transparent_65%)]" />
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[url('/pattern-code.svg')] bg-[size:160px_160px] opacity-60 mix-blend-soft-light" />
+    <main className="relative isolate min-h-[calc(100vh-8rem)] overflow-hidden">
 
       <section className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 py-20">
         <header className="max-w-3xl">

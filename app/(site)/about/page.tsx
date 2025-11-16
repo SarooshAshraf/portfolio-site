@@ -57,23 +57,16 @@ const experiences: Experience[] = [
 
 export default function ExperienceTimelinePage() {
   return (
-    <main className="relative isolate overflow-hidden bg-slate-950">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.2),transparent_65%)]" />
-        <div className="absolute inset-0 bg-[url('/pattern-code.svg')] bg-[size:160px_160px] opacity-60 mix-blend-soft-light" />
-      </div>
+    <main className="relative isolate overflow-hidden">
 
       <section className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 py-24">
         <header className="max-w-3xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-indigo-200/80">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-white/70">
             Experience timeline
           </span>
-          <h1 className="mt-6 text-4xl font-semibold text-white sm:text-5xl">
-            Mapping the journey from curiosity to momentum.
-          </h1>
+          <h1 className="mt-6 text-4xl font-semibold text-white sm:text-5xl">My Career Journey</h1>
           <p className="mt-4 text-lg text-slate-300/90">
-            Every icon marks a moment where engineering insight, product intuition, and data storytelling came together.
-            Hover, tap, or focus on each milestone to explore the details.
+            The experiences that shaped my skills. Hover (or tap) on each milestone to explore the details.
           </p>
         </header>
 
