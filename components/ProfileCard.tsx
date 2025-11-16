@@ -324,14 +324,15 @@ function ProfileCardComponent({
     handleDeviceOrientation,
   ])
 
-  const cardStyle: CSSProperties = useMemo(
-    () => ({
-      '--icon': iconUrl ? `url(${iconUrl})` : 'none',
-      '--grain': grainUrl ? `url(${grainUrl})` : 'none',
-      '--inner-gradient': innerGradient ?? DEFAULT_INNER_GRADIENT,
-      '--behind-glow-color': behindGlowColor ?? 'rgba(255,255,255,0.4)',
-      '--behind-glow-size': behindGlowSize ?? '45%',
-    }),
+  const cardStyle = useMemo(
+    () =>
+      ({
+        '--icon': iconUrl ? `url(${iconUrl})` : 'none',
+        '--grain': grainUrl ? `url(${grainUrl})` : 'none',
+        '--inner-gradient': innerGradient ?? DEFAULT_INNER_GRADIENT,
+        '--behind-glow-color': behindGlowColor ?? 'rgba(255,255,255,0.4)',
+        '--behind-glow-size': behindGlowSize ?? '45%',
+      }) as CSSProperties,
     [iconUrl, grainUrl, innerGradient, behindGlowColor, behindGlowSize],
   )
 
