@@ -32,6 +32,8 @@
   --sunpillar-clr-5: var(--sunpillar-5);
   --sunpillar-clr-6: var(--sunpillar-6);
   --card-radius: 30px;
+  --pc-card-height: min(90svh, 620px);
+  --pc-card-width: calc(var(--pc-card-height) * 0.718);
 }
 
 .pc-card-wrapper {
@@ -65,8 +67,7 @@
 }
 
 .pc-card {
-  height: 90svh;
-  max-height: 620px;
+  height: var(--pc-card-height);
   display: grid;
   aspect-ratio: 0.718;
   border-radius: var(--card-radius);
@@ -81,6 +82,12 @@
   backface-visibility: hidden;
   overflow: hidden;
   margin: 0 auto;
+}
+
+.hero-social-links {
+  width: min(100%, var(--pc-card-width, 28rem));
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .pc-card:hover,
@@ -435,9 +442,9 @@
 }
 
 @media (max-width: 768px) {
-  .pc-card {
-    height: 70svh;
-    max-height: 450px;
+  :root {
+    --pc-card-height: min(70svh, 450px);
+    --pc-card-width: calc(var(--pc-card-height) * 0.718);
   }
   .pc-details {
     top: 2em;
@@ -472,9 +479,9 @@
 }
 
 @media (max-width: 480px) {
-  .pc-card {
-    height: 60svh;
-    max-height: 380px;
+  :root {
+    --pc-card-height: min(60svh, 380px);
+    --pc-card-width: calc(var(--pc-card-height) * 0.718);
   }
   .pc-details {
     top: 1.5em;
@@ -511,9 +518,9 @@
 }
 
 @media (max-width: 320px) {
-  .pc-card {
-    height: 55svh;
-    max-height: 320px;
+  :root {
+    --pc-card-height: min(55svh, 320px);
+    --pc-card-width: calc(var(--pc-card-height) * 0.718);
   }
   .pc-details h3 {
     font-size: min(3svh, 1.5em);

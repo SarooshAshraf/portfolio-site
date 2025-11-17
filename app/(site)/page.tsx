@@ -11,16 +11,19 @@ const socialLinks = [
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/in/sarooshashraf/',
     icon: '/linkedin.png',
+    align: 'justify-self-start',
   },
   {
     label: 'GitHub',
     href: 'https://github.com/sarooshashraf',
     icon: '/github-icon.png',
+    align: 'justify-self-center',
   },
   {
     label: 'Instagram',
     href: 'https://www.instagram.com/sarooshashraf/',
     icon: '/instagram.png',
+    align: 'justify-self-end',
   },
 ] as const
 
@@ -114,48 +117,45 @@ export default function Page() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, ease: 'easeOut', delay: 0.5 }}
           >
-            <ProfileCard
-              className="mx-auto w-full max-w-[520px]"
-              avatarUrl="/about-hero.jpg"
-              miniAvatarUrl="/about-hero.jpg"
-              name="Saroosh Ashraf"
-              title="Software Engineer"
-              status="Get in touch with me!"
-              contactText="Connect"
-              enableTilt
-              enableMobileTilt={false}
-              behindGlowColor="rgba(255,255,255,0.1)"
-              innerGradient="linear-gradient(140deg, rgba(10,10,10,0.98) 0%, rgba(33,33,33,0.75) 100%)"
-              onContactClick={() => {
-                window.location.assign('/recruiter')
-              }}
-            />
-          </motion.div>
-          <motion.div
-            className="mx-auto flex w-full max-w-[520px] flex-wrap items-center justify-center gap-4 pt-4"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: 'easeOut', delay: 0.6 }}
-          >
-            {socialLinks.map((social) => (
-              <Link
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-black/60 p-3 transition hover:border-white hover:bg-white"
-              >
-                <span className="sr-only">{social.label}</span>
-                <Image
-                  src={social.icon}
-                  alt={social.label}
-                  width={36}
-                  height={36}
-                  className="object-contain"
-                  style={{ filter: 'brightness(0) invert(1)' }}
-                />
-              </Link>
-            ))}
+            <div className="mx-auto flex w-full max-w-[520px] flex-col items-center gap-4">
+              <ProfileCard
+                className="w-full"
+                avatarUrl="/about-hero.jpg"
+                miniAvatarUrl="/about-hero.jpg"
+                name="Saroosh Ashraf"
+                title="Software Engineer"
+                status="Get in touch with me!"
+                contactText="Connect"
+                enableTilt
+                enableMobileTilt={false}
+                behindGlowColor="rgba(255,255,255,0.1)"
+                innerGradient="linear-gradient(140deg, rgba(10,10,10,0.98) 0%, rgba(33,33,33,0.75) 100%)"
+                onContactClick={() => {
+                  window.location.assign('/recruiter')
+                }}
+              />
+              <div className="hero-social-links mx-auto mt-4 flex items-center justify-between">
+                {socialLinks.map((social) => (
+                  <Link
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-black/60 p-3 transition hover:border-white hover:bg-white"
+                  >
+                    <span className="sr-only">{social.label}</span>
+                    <Image
+                      src={social.icon}
+                      alt={social.label}
+                      width={36}
+                      height={36}
+                      className="object-contain"
+                      style={{ filter: 'brightness(0) invert(1)' }}
+                    />
+                  </Link>
+                ))}
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
