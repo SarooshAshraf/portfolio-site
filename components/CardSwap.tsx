@@ -86,8 +86,19 @@ const CardSwap: React.FC<CardSwapProps> = ({
   easing = 'elastic',
   children,
 }) => {
-  let config =
-    easing === 'elastic'
+  const config = useMemo(() => {
+    if (scrollControlled) {
+      const dur = Math.max(0.25, scrollSwapDuration)
+      return {
+        ease: 'power1.out',
+        durDrop: Math.max(0.22, dur * 0.85),
+        durMove: Math.max(0.22, dur * 0.85),
+        durReturn: Math.max(0.22, dur * 0.85),
+        promoteOverlap: 0.2,
+        returnDelay: 0.02,
+      }
+    }
+    return easing === 'elastic'
       ? {
           ease: 'elastic.out(0.6, 0.9)',
           durDrop: 2,
@@ -104,21 +115,10 @@ const CardSwap: React.FC<CardSwapProps> = ({
           promoteOverlap: 0.45,
           returnDelay: 0.2,
         }
-
-  if (scrollControlled) {
-    const dur = Math.max(0.25, scrollSwapDuration)
-    config = {
-      ease: 'power1.out',
-      durDrop: Math.max(0.22, dur * 0.85),
-      durMove: Math.max(0.22, dur * 0.85),
-      durReturn: Math.max(0.22, dur * 0.85),
-      promoteOverlap: 0.2,
-      returnDelay: 0.02,
-    }
-  }
+  }, [easing, scrollControlled, scrollSwapDuration])
 
   const childArr = useMemo(() => Children.toArray(children) as ReactElement<CardProps>[], [children])
-  const refs = useMemo<CardRef[]>(() => childArr.map(() => React.createRef<HTMLDivElement>()), [childArr.length])
+  const refs = useMemo<CardRef[]>(() => childArr.map(() => React.createRef<HTMLDivElement>()), [childArr])
 
   const order = useRef<number[]>(Array.from({ length: childArr.length }, (_, i) => i))
 
@@ -313,9 +313,13 @@ const CardSwap: React.FC<CardSwapProps> = ({
     delay,
     pauseOnHover,
     skewAmount,
-    easing,
     scrollControlled,
-    scrollSwapDuration,
+    config.durDrop,
+    config.durMove,
+    config.durReturn,
+    config.ease,
+    config.promoteOverlap,
+    config.returnDelay,
     refs,
     clickToFront,
     onCardClick,
@@ -330,7 +334,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
           onClick: (e) => {
             child.props.onClick?.(e as React.MouseEvent<HTMLDivElement>)
             if (clickToFront) {
-              promoteRef.current ? promoteRef.current(i) : onCardClick?.(i)
+              if (promoteRef.current) {
+                promoteRef.current(i)
+              } else if (onCardClick) {
+                onCardClick(i)
+              }
             } else {
               onCardClick?.(i)
             }
