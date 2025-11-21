@@ -97,14 +97,30 @@ jobs:
             --exclude=node_modules/
           )
 
-          echo "Syncing static export to ${TARGET_SITE} with rsync..."
-          rsync "${RSYNC_OPTS[@]}" ./out/ "${TARGET_SITE}/"
+          TARGET_SITE_STAGING="${TARGET_SITE}.staging"
+          TARGET_SITE_PREVIOUS="${TARGET_SITE}.previous"
 
-          # Optional atomic deploy pattern:
-          # 1. rsync "${RSYNC_OPTS[@]}" ./out/ "${TARGET_SITE}.staging/"
-          # 2. mv "${TARGET_SITE}" "${TARGET_SITE}.previous"
-          # 3. mv "${TARGET_SITE}.staging" "${TARGET_SITE}"
-          # 4. Keep "${TARGET_SITE}.previous" for quick rollback, then prune when stable.
+          echo "Syncing static export to ${TARGET_SITE_STAGING} with rsync..."
+          rsync "${RSYNC_OPTS[@]}" ./out/ "${TARGET_SITE_STAGING}/"
+
+          echo "Performing atomic swap..."
+          # 1. Remove old previous backup if it exists
+          if [ -d "${TARGET_SITE_PREVIOUS}" ]; then
+            echo "Removing old backup ${TARGET_SITE_PREVIOUS}..."
+            rm -rf "${TARGET_SITE_PREVIOUS}"
+          fi
+
+          # 2. Move current live site to previous (backup)
+          if [ -d "${TARGET_SITE}" ]; then
+            echo "Backing up current site to ${TARGET_SITE_PREVIOUS}..."
+            mv "${TARGET_SITE}" "${TARGET_SITE_PREVIOUS}"
+          fi
+
+          # 3. Move staging to live
+          echo "Promoting staging to live..."
+          mv "${TARGET_SITE_STAGING}" "${TARGET_SITE}"
+          
+          echo "Atomic deploy complete. Previous version kept at ${TARGET_SITE_PREVIOUS}"
 
       - name: Normalize permissions (static site)
         run: |
