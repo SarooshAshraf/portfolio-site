@@ -7,7 +7,11 @@ const config: Config = {
     './content/**/*.{md,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        '3xl': '2000px',
+      },
+    },
   },
   plugins: [],
 }

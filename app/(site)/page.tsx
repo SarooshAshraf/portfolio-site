@@ -85,8 +85,8 @@ export default function Page() {
   return (
     <main className="relative isolate overflow-hidden">
 
-      <section className="relative px-6 pt-20 pb-16">
-        <div className="mx-auto flex w-full flex-col items-center gap-10 text-center">
+      <section className="relative px-6 pt-20 pb-16 md:pt-12 lg:pt-20">
+        <div className="mx-auto flex w-full flex-col items-center gap-10 text-center md:gap-6 lg:gap-10">
           <motion.h1
             className="text-center text-4xl font-semibold leading-tight text-white sm:text-5xl"
             initial={{ opacity: 0, y: 24 }}
@@ -117,7 +117,7 @@ export default function Page() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, ease: 'easeOut', delay: 0.5 }}
           >
-            <div className="mx-auto flex w-full max-w-[520px] flex-col items-center gap-4">
+            <div className="mx-auto flex w-full max-w-[400px] flex-col items-center gap-4 md:max-w-[340px] lg:max-w-[520px] 2xl:max-w-[400px] 3xl:max-w-[900px]">
               <ProfileCard
                 className="w-full"
                 avatarUrl="/about-hero.jpg"
@@ -134,24 +134,25 @@ export default function Page() {
                   window.location.assign('/recruiter')
                 }}
               />
-              <div className="hero-social-links mx-auto mt-4 flex items-center justify-between">
+              <div className="hero-social-links mx-auto mt-4 flex items-center justify-between md:mt-2 lg:mt-4">
                 {socialLinks.map((social) => (
                   <Link
                     key={social.label}
                     href={social.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-black/60 p-3 transition hover:border-white hover:bg-white"
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-black/60 p-3 transition hover:border-white hover:bg-white md:h-10 md:w-10 lg:h-16 lg:w-16 2xl:h-16 2xl:w-16 3xl:h-28 3xl:w-28"
                   >
                     <span className="sr-only">{social.label}</span>
-                    <Image
-                      src={social.icon}
-                      alt={social.label}
-                      width={36}
-                      height={36}
-                      className="object-contain"
-                      style={{ filter: 'brightness(0) invert(1)' }}
-                    />
+                    <div className="relative h-6 w-6 md:h-5 md:w-5 lg:h-9 lg:w-9 2xl:h-9 2xl:w-9 3xl:h-16 3xl:w-16">
+                      <Image
+                        src={social.icon}
+                        alt={social.label}
+                        fill
+                        className="object-contain"
+                        style={{ filter: 'brightness(0) invert(1)' }}
+                      />
+                    </div>
                   </Link>
                 ))}
               </div>
