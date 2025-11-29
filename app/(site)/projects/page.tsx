@@ -52,13 +52,13 @@ const projects: ProjectCard[] = [
 export default function ProjectsPage() {
   return (
     <main className="relative isolate overflow-hidden">
-      <section className="flex w-full flex-col gap-10 py-20 lg:py-24">
+      <section className="flex min-h-screen w-full flex-col gap-10 py-20 lg:py-24">
         <header className="space-y-3 px-6">
           <h1 className="text-4xl font-semibold text-white sm:text-5xl">My projects</h1>
           <p className="text-sm uppercase tracking-[0.3em] text-slate-200/80">Scroll or click to swap cards</p>
         </header>
 
-        <div className="relative h-[620px] w-full overflow-visible sm:h-[580px] lg:h-[640px]">
+        <div className="projects-stage relative mt-auto h-[620px] w-full overflow-visible sm:h-[580px] lg:h-[640px]">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-y-0 right-0 w-[60%] rounded-[40px] bg-gradient-to-b from-white/5 via-purple-500/10 to-transparent blur-3xl"
