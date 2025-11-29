@@ -497,7 +497,7 @@ const GlobalSpotlight: React.FC<{
 
 const BentoCardGrid: React.FC<{
   children: React.ReactNode
-  gridRef?: React.RefObject<HTMLDivElement | null>
+  gridRef?: React.RefObject<HTMLDivElement>
 }> = ({ children, gridRef }) => (
   <div
     className="bento-section grid w-full max-w-none gap-3 p-3 select-none relative"
@@ -536,7 +536,7 @@ const MagicBento: React.FC<BentoProps> = ({
   clickEffect = true,
   enableMagnetism = true,
 }) => {
-  const gridRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null!)
   const isMobile = useMobileDetection()
   const shouldDisableAnimations = disableAnimations || isMobile
 
